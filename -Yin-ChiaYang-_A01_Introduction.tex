@@ -1,0 +1,174 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdfauthor={Yin-Chia Yang},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{Yin-Chia Yang}
+\date{}
+
+\begin{document}
+
+\hypertarget{overview}{%
+\subsection{OVERVIEW}\label{overview}}
+
+This exercise accompanies the introductory material in Environmental
+Data Analytics.
+
+\hypertarget{directions}{%
+\subsection{Directions}\label{directions}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Rename this file
+  \texttt{\textless{}FirstLast\textgreater{}\_A01\_Introduction.Rmd}
+  (replacing \texttt{\textless{}FirstLast\textgreater{}} with your first
+  and last name).
+\item
+  Change ``Student Name'' on line 3 (above) with your name.
+\item
+  Work through the steps, \textbf{creating code and output} that fulfill
+  each instruction.
+\item
+  Be sure to \textbf{answer the questions} in this assignment document.
+\item
+  When you have completed the assignment, \textbf{Knit} the text and
+  code into a single PDF file.
+\item
+  After Knitting, submit the completed exercise (PDF file) to the
+  appropriate assigment section on Sakai.
+\end{enumerate}
+
+\hypertarget{discussion-questions}{%
+\subsection{1) Discussion Questions}\label{discussion-questions}}
+
+Enter answers to the questions just below the \textgreater Answer:
+prompt.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  What are your previous experiences with data analytics, R, and Git?
+  Include both formal and informal training.
+\end{enumerate}
+
+\begin{quote}
+Answer: I took a basic certificated class with python provided by my
+undergrad university's learning center, also was forced to learn java
+but didn't really excelled on that. Other than that, just the basic
+excel trainings, I am new to both R and Git.
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Are there any components of the course about which you feel confident?
+\end{enumerate}
+
+\begin{quote}
+Answer: Hopefully with some understanding of other programing language
+could help to smooth the learning curve, and hopefully our
+microeconometric class last semester will be helpful to understand the
+statistics part.
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Are there any components of the course about which you feel
+  apprehensive?
+\end{enumerate}
+
+\begin{quote}
+Answer: I feel like we are in good hands, my only concern is I will have
+to get used to setting up my routine to finish the requirements.
+\end{quote}
+
+\hypertarget{github}{%
+\subsection{2) GitHub}\label{github}}
+
+Provide a link below to your forked course repository in GitHub. Make
+sure you have pulled all recent changes from the course repository and
+that you have updated your course README file, committed those changes,
+and pushed them to your GitHub account.
+
+\begin{quote}
+Answer: \url{https://github.com/yangeline/EDA_Spring2024.git}
+\end{quote}
+
+\hypertarget{knitting}{%
+\subsection{3) Knitting}\label{knitting}}
+
+When you have completed this document, click the \texttt{knit}
+button.This should produce a PDF copy of your markdown document. Submit
+this PDF to Sakai.
+
+\end{document}

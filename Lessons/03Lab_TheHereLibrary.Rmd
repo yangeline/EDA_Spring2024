@@ -1,0 +1,72 @@
+---
+title: "Lab 3 - Workspaces and the Here library"
+author: "Environmental Data Analytics | John Fay and Luana Lima "
+date: "Fall 2023"
+output: pdf_document
+geometry: margin=2.54cm
+editor_options: 
+  chunk_output_type: console
+---
+
+## Lesson Objectives
+1. Explore how the "here" library helps navigate workspaces in RStudio
+
+### Background
+Recall that we use R in a project setting: We open our R sessions via the Project dropdown or click on an Rproj file to open a project directly. Normally when we do this, our project working directory is set to the project folder and we can locate all other files via relative paths, i.e., paths relative to where our working directory is set. 
+
+We typically issue the `getwd()` command to confirm that our working directory is as expected: 
+
+```{r Getting the working directory}
+# Working directory should be set to the base folder for the Environmental Data Analytics Course repository, i.e., the folder that houses the R Project file.
+
+getwd()
+setwd('./EDA_Spring/EDA_forked_Spring2024/Data')
+```
+
+We mentioned that we have options to change the working directory, e.g. via the `setwd()` statement or via RStudio's menus. Once changed, however, subsequent calls to relative paths may point to the incorrect locations leading to confusion. 
+
+### An alternative: the `here` package
+And thus we introduce the `here` package, designed to streamline this process. We will not be using this option in class explicitly, but it is growing quite popular among R users. A more detailed description of the library and rationale can be found here: 
+ - Overview:    https://here.r-lib.org & http://jenrichmond.rbind.io/post/how-to-use-the-here-package/
+ - Github repo: https://github.com/jennybc/here_here
+ 
+```{r The here package}
+install.packages('here')
+library(here) #Note this package may conflict with plyr and lubridate
+
+#The command `here()` points to the location containing the ".Rrpoj" file, i.e. 
+# the project directory...
+here() 
+
+#`here()` is not affected by the setwd() command
+setwd('data')
+getwd()
+here()
+
+#Return R's working directory to the project directory
+setwd(here())
+
+#Arguments in the `here()` command allow easy navigation within subfolders
+filename <- here('Data','Raw','USGS_Site02085000_Flow_Raw.csv')
+print(filename)
+the_data <- read.csv(
+  file = here('Data','Raw','USGS_Site02085000_Flow_Raw.csv'),
+  stringsAsFactors = T
+)
+
+#Create a list of all files in a folder using "dir" and "here"
+filenames <- dir(here('Data','Raw'),pattern = ("*.csv"))
+```
+
+### Exercise: the here package in action
+ 1. Use the `here` package with `read.csv()` to read the `NTL-LTER_Lake_ChemistryPhysics_Raw.csv` file into a dataframe
+ 2. Refer to the example code shown here (http://jenrichmond.rbind.io/post/where-is-here/) to read in all CSV files starting with "EPAair_03" into a single dataframe. 
+```{r here in action}
+
+# 1. 
+
+
+# 2.
+
+```
+
