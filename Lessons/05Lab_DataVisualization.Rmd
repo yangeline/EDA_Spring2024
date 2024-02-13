@@ -47,7 +47,7 @@ ggplot(data=data.frame(x=0,y=0))+
   geom_text(
     x=0,
     y=0.025,
-    label=expression(paste("Mean is ", mu,",", R^{2},'=0.6'))
+    label=expression(paste("Mean is ", mu,",", R^{2},'=0.6')) #add text/symbols to the plot
     )
 
 #Print the plot
@@ -94,18 +94,32 @@ Say we want to plot the number of records each month in the Peter/Paul lakes dat
 
 ```{r Plot the number of records by month}
 #What kind of values are months?
+class(PeterPaul.chem.nutrients$month)
 
 #List unique values
+unique(PeterPaul.chem.nutrients$month)
 
 #Plot how many Lake observations occur each month
+ggplot(PeterPaul.chem.nutrients, aes(x = month)) +
+  geom_bar()
 
 #Convert month to a factor -- with 12 levels, labelled with month names
+PeterPaul.chem.nutrients$month_factor <- factor(
+  PeterPaul.chem.nutrients$month,
+  levels = 1:12,
+  labels = month.abb)
 
 #Try again: Plot how many Lake observations occur each month
+ggplot(PeterPaul.chem.nutrients, aes(x = month)) +
+  geom_bar()
 
 #Alter to include missing months
+ggplot(PeterPaul.chem.nutrients, aes(x = month_factor)) +
+  geom_bar() +
+  scale_x_discrete(drop = FALSE)
 
 #Tidy up the code
+
 
 ```
 
@@ -145,18 +159,18 @@ surface_temp_1999_plot
 
 #Apply a theme
 surface_temp_1999_plot + 
-  theme_gray()
+  theme_classic() #theme changes the color under
 
 #Apply a ggtheme
 surface_temp_1999_plot + 
-  theme_wsj() + 
+  theme_wsj() +  #wsj = wallstreetjournal
   scale_color_wsj()
 
 #Add a title
 surface_temp_1999_plot + 
-  ggtitle("Surface temperature, 1999") +
-  labs(color='Lake') + 
-  theme_wsj()
+  ggtitle("Surface temperature, 1999") + #add title
+  labs(color='Lake') + #add label name
+  theme_wsj() #use the settings in wsj
 ```
 
 
@@ -229,7 +243,19 @@ Exercise: build your own scatterplots of PeterPaul.chem.nutrients
 # Plot surface temperatures by day of  year. 
 # Color your points by year, and facet by lake in two rows.
 # Change the ylab name
-
+surface_temp_by_year <- PeterPaul.chem.nutrients %>% 
+  filter(depth == 0) %>% 
+ ggplot(
+    mapping = aes(
+      x=daynum,
+      y=temperature_C,
+      color=year4)
+    ) +
+  geom_point(alpha=0.5) + #alpha = transparency
+  facet_wrap(vars(lakename)) +
+  ylab(expression(paste("Temperature", degree, "C"))) +
+  xlab("Year")
+print(surface_temp_by_year)
 
 #2. 
 # Plot temperature by date. Color your points by depth.
@@ -237,6 +263,20 @@ Exercise: build your own scatterplots of PeterPaul.chem.nutrients
 # Change the color palette to magma and play with direction (+- 1), which one makes more sense?
 # Change x axis to include marker/labels every 5 years
 
+surface_temp_by_date <- PeterPaul.chem.nutrients %>% 
+  filter(depth == 0) %>% 
+ ggplot(
+    mapping = aes(
+      x=sampledate,
+      y=temperature_C,
+      color=depth)
+    ) +
+  geom_point() +
+  facet_wrap(vars(lakename)) +
+  ylab(expression(paste("Temperature", degree, "C"))) +
+  xlab("Year")
+  
+print(surface_temp_by_date)
 
 
 ```
