@@ -1,0 +1,140 @@
+---
+title: 'A06 - Crafting Reports'
+author: "Yin-Chia Yang" 
+date: "Spring 2024"
+output: pdf_document
+toc: true
+editor_options: 
+  chunk_output_type: console
+---
+\listoffigures
+
+## Objectives:
+
+1.  More practice with R code chunk options
+1.  Gain proficiency with figures, tables (w/`Kable`) table of contents, etc.
+1.  Debugging knitting issues
+
+## Directions
+
+1.  Rename this file `<FirstLast>_A06_CraftingReports.Rmd` (replacing `<FirstLast>` with your first and last name).
+1.  Change "Student Name" on line 3 (above) with your name.
+1.  Work through the tasks, **creating code and output** that fulfill each instruction.
+1.  Be sure your code is tidy; use line breaks to ensure your code fits in the knitted output.
+1.  Be sure to **answer the questions** in this assignment document.
+1.  When you have completed the assignment, **Knit** the text and code into a single PDF file.
+1.  **Be sure that you also commit and push your final Rmd document to your GitHub account**.
+
+## Task 1 - Basic Markdown
+
+Using markdown, create a table beneath the `Table: EPA Air Quality` line below that summarizes the metadata of the EPA Air Quality data. The first column should have the header "Item" and should include the the three metadata attribute item names: "Source", "Date", and "Filename". The second column should have the header "Value" and include the metadata values: "EPA Air Quality System (AQS)", "2018-2019", and "EPAair_O3_PM25_NC1819_Processed.csv". The first column should be aligned to the right and the second to the left.
+
+Table: EPA Air Quality
+
+Item        | Value 
+-----------:|:-----------------------------------
+Source      | EPA Air Quality System (AQS) 
+Date        | 2018-2019
+Filename    | EPAair_O3_PM25_NC1819_Processed.csv
+
+---
+
+## Task 2 - Import packages and data, suppressing messages
+
+Set the following R code chunk so that it runs when knit, but no messages, errors, or any output is shown. The code itself, however, should be displayed.
+
+```{r project.setup, echo=TRUE, error=FALSE, message=FALSE, results='hide'}
+#Import libraries
+library(tidyverse);library(lubridate);library(here);library(knitr)
+
+#Import EPA data (from the processed_KEY folder) & fix dates
+epa_data <- read.csv(
+  here("Data","Processed_KEY","EPAair_O3_PM25_NC1819_Processed.csv"),
+  stringsAsFactors = TRUE) %>% 
+  mutate(Date = ymd(Date))
+```
+
+---
+
+## Task 3: Creating tables
+
+Set the following R code chunk to display two tables, using knitr's `kable()` function, one listing the mean PM2.5 concentrations for each county, and the other the same except for Ozone. The titles should be "Mean Particulates (2.5mm)" and "Mean Ozone", respectively. And the column names should be "County" and "µg/m3" for both tables.
+
+Customize the chunk options such that the code is run but is not displayed in the knitted document. The output, however, should be displayed.
+
+> **TIPS:**
+>
+> -   Use `"$\\mu g/m^3$"` as a column name to generate a nicely formatted string via markdown/MathJax notation
+>
+> -   If your output table spans across two pages, try inserting a page break in the markdown just before your code chunk.
+
+
+```{r data.summary, message=FALSE, include=FALSE}
+#Compute mean PM2.5 concentration for each county, sorted by value
+summary_PM25 <- epa_data %>% 
+  drop_na(PM2.5) %>% 
+  group_by(COUNTY) %>% 
+  summarize(mean_PM2.5 = mean(PM2.5)) %>% 
+  arrange(mean_PM2.5)
+
+#Compute mean ozone concentration for each county, sorted by value
+summary_Ozone <- epa_data %>% 
+  drop_na(Ozone) %>% 
+  group_by(COUNTY) %>% 
+  summarize(
+    mean_Ozone = mean(Ozone)) %>% 
+  arrange(mean_Ozone)
+```
+
+```{r kable, message=FALSE, echo=FALSE}
+#Use the `kable` function to produce the 2 tables in markdown format
+knitr::kable(summary_PM25, caption = "Mean Particulates (2.5mm)", col.names = c("County","$\\mu g/m^3$"))
+knitr::kable(summary_Ozone, caption = "Mean Ozone",
+             col.names = c("County","$\\mu g/m^3$"))
+```
+
+---
+
+## Task 4: Plots
+
+Create two separate code chunks that create boxplots of the distribution of Ozone levels by month using, one for only records collected in 2018 and one for records in 2019. Customize the chunk options such that the final figures are displayed but not the code used to generate the figures. In addition, align the plots on the left side of the page and set the figure heights so both plots fit on the same page with minimal space remaining. Lastly, add a `fig.cap` chunk option to add a caption (title) to your plot that will display underneath the figure.
+```{r date labels, echo=FALSE, warning=FALSE}
+library(ggplot2)
+library(lubridate)
+epa_data$month_factor <- factor(
+  epa_data$Month,
+  levels = 1:12,
+  labels = month.abb)
+```
+
+```{r boxplot ozone 2018, echo=FALSE, warning=FALSE, fig.cap= "2018 Ozone values by month", fig.dim=c(6,4)}
+EPA_boxpolt_ozone_2018 <- epa_data %>% 
+  filter(Year == 2018) %>% 
+  ggplot(
+    mapping = aes(x= month_factor, y= Ozone)) +
+    labs(x= "Month", y= "Concentration (µg/m3)", 
+         title= "Monthly Ozone Concentrations - 2018") +
+  geom_boxplot()
+print(EPA_boxpolt_ozone_2018)
+```
+
+```{r boxplot ozone 2019, echo=FALSE, warning=FALSE, fig.cap= "2019 Ozone values by month", fig.dim= c(6,4)}
+EPA_boxpolt_ozone_2019 <- epa_data %>% 
+  filter(Year == 2019) %>% 
+  ggplot(
+    mapping = aes(x= month_factor, y= Ozone)) +
+    labs(x= "Month", y= "Concentration (µg/m3)", 
+         title= "Monthly Ozone Concentrations - 2019") +
+  geom_boxplot()
+print(EPA_boxpolt_ozone_2019)
+```
+
+\newpage
+
+## Task 5: Knit and submit.
+Add a table of contents and list of figures to your document and knit to a PDF. Submit your PDF to Sakai, but also be sure to commit and push your Rmd file used to create this knit document to GitHub. In the section below, add a link to your GitHub repository. 
+
+
+
+## Git Repository
+https://github.com/yangeline/EDA_Spring2024.git
