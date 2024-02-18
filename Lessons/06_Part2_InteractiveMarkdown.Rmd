@@ -1,0 +1,99 @@
+---
+title: '6 - Part 2: Interactive R Markdown'
+author: Environmental Data Analytics | John Fay & Luana Lima 
+date: "Spring 2024"
+output: pdf_document
+---
+
+## Overview
+RMarkdown is a powerful tool for creating dynamic documents that combine code, text, and graphics. With the addition of widgets, it's possible to make these documents even more interactive and engaging. In this lesson, we will explore how to create interactive HTML files using RMarkdown widgets.
+
+## LESSON OBJECTIVES
+
+1. Create plotting functions that accept variables
+2. Use widgets from the `shiny` library to make interactive HTML documents
+
+### Set up the coding environment
+```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
+#Load packages
+library(tidyverse);library(here);library(lubridate)
+
+#Load data
+nutrient_data <- read.csv(
+  here('Data/Processed_KEY','NTL-LTER_Lake_Nutrients_PeterPaul_Processed.csv'),
+  stringsAsFactors = TRUE)
+
+#Fix dates
+nutrient_data$sampledate = ymd(nutrient_data$sampledate)
+
+#Set a default plotting theme
+my_theme <- theme_classic(base_size = 14)
+theme_set(my_theme)
+
+```
+
+
+### Create a base plot
+We will plot Total P as a function of time, coloring data by depth, and symbolizing by lake
+```{r Create base plot, echo=FALSE, eval=FALSE}
+#Construct the plot
+nutrient_data %>% 
+  filter(year4 > 1990 & year4 < 2005) %>% 
+  ggplot(
+    aes(
+      x = sampledate, 
+      y = tp_ug, 
+      fill = depth_id, 
+      shape = lakename)) +
+  geom_point(alpha = 0.8, size = 2) +
+  scale_x_date(
+    date_breaks = "1 years",
+    date_labels = '%Y') +
+  scale_shape_manual(values = c(21, 24)) +
+  labs(
+    title = "Concentration over time, by depth and lake",
+    x = "Date", 
+    y = expression(Concentration ~ (mu*g / L)), 
+    shape = "Lake", 
+    fill = "Depth ID") +
+  scale_fill_viridis_c(
+    option = "mako", 
+    begin = 0, 
+    end = 1, 
+    guide = guide_colorbar(reverse = T),
+    direction = -1)
+```
+
+## Using variables in plots
+Now tweak the above code so that the variable we plot (`tp_ug`) is specified as a variable rather than hard coded in our ggplot command. We will also set the start and end dates to variables as well. 
+
+To do this we need to convince R that the value we associate with the `y` aesthetic is a variable, not a column name. This is done by the odd convention of inserting the variable within the code `!!sym()`. The `!!` (pronounced "bang-bang") combined with `sym()` are "Tidy eval helpers" necessary because tidy-R does away with quotations. See more info [here](https://ggplot2.tidyverse.org/reference/tidyeval.html).
+
+```{r Tweak plot to use variables, echo=FALSE}
+
+
+```
+
+##Interactive R with Shiny Widgets
+The R MarkDown Cheat Sheet provides a short example on how to make your Markdown document interactive. First you must alter your yaml section to read:  
+```
+output: html_document
+runtime: shiny
+```
+Notice that when you do so, the Knit menu is replaced. 
+
+Then we can add the code chunk listed in the document.Before running this code, however, we should set the code chunk options for the previous code chunks so that they are not run (eval) and not shown (echo). 
+
+```{r, echo=FALSE}
+
+```
+
+Shiny has many other input widgets: https://shiny.rstudio.com/gallery/widget-gallery.html. Below we'll use a Select Box widget to specifiy the variable shown in our plot. We'll also add a slider range to limit the date shown in our plot. 
+
+Note: Before running this plot, set the previous code chunk to not evaluate
+
+```{r widget exploration, echo=FALSE}
+
+```
+
+
