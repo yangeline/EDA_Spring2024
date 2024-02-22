@@ -1,0 +1,130 @@
+---
+title: "7: Lab - Generalized Linear Models"
+author: "Environmental Data Analytics | John Fay and Luana Lima | Developed by Kateri Salk"
+date: "Spring 2024"
+output: pdf_document
+geometry: margin=2.54cm
+editor_options: 
+  chunk_output_type: console
+---
+
+## Objectives
+1. Answer questions on M5/A5
+2. Answer questions on M6 - GLMs
+3. Practice more application GLM to real datasets
+
+
+## Set up
+```{r, message = FALSE}
+library(tidyverse)
+library(agricolae)   
+library(here)
+here()
+
+EPAair <- read.csv(here("Data/Processed_KEY/EPAair_O3_PM25_NC1819_Processed.csv"), stringsAsFactors = TRUE)
+# Set date to date format
+EPAair$Date <- as.Date(EPAair$Date, format = "%Y-%m-%d")
+
+Litter <- read.csv(here("Data/Processed_KEY/NEON_NIWO_Litter_mass_trap_Processed.csv"), stringsAsFactors = TRUE)
+# Set date to date format
+Litter$collectDate <- as.Date(Litter$collectDate , format = "%Y-%m-%d")
+
+# Set theme
+mytheme <- theme_classic(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "top")
+theme_set(mytheme)
+```
+
+
+
+## Visualization and interpretation challenge
+
+Create three plots, each with appropriately formatted axes and legends. Choose a non-default color palette.
+
+1. geom_density of ozone divided by year (distinguish between years by adding transparency to the geom_density layer).
+2. geom_boxplot of ozone divided by year. Add letters representing a significant difference between 2018 and 2019 (hint: stat_summary). 
+3. geom_violin of ozone divided by year, with the 0.5 quantile marked as a horizontal line. Add letters representing a significant difference between 2018 and 2019. 
+
+```{r}
+#Exercise 1:
+
+
+```
+
+## Linear Regression
+
+Important components of the linear regression are the correlation and the R-squared value. The **correlation** is a number between -1 and 1, describing the relationship between the variables. Correlations close to -1 represent strong negative correlations, correlations close to zero represent weak correlations, and correlations close to 1 represent strong positive correlations. The **R-squared value** is the correlation squared, becoming a number between 0 and 1. The R-squared value describes the percent of variance accounted for by the explanatory variables. 
+
+For the NTL-LTER dataset, can we predict PM2.5 from Ozone?
+
+```{r}
+
+#Exercise 2: Run a linear regression PM2.5 by Ozone. Find the p-value and R-squared value. 
+
+
+
+#Exercise 3: Build a scatterplot. Add a line and standard error for the linear regression. Add the regression equation to the plot
+
+
+
+```
+
+
+## AIC to select variables
+
+What other variables can we add to improve model?
+
+```{r}
+
+#Exercise 4: Build correlation plots and identify more possible explanatory variables to add to the regression.
+
+
+
+
+#Exercise 5: Choose a model by AIC in a Stepwise Algorithm. Do the results from AIC match the variables you selected on Exercise 4?
+
+
+
+
+#Exercise 6: Run another regression using the variables selected on Exercise 6. Compare r-squared value with the one from Exercise 2. 
+
+```
+
+
+
+## Litter Exercise
+
+```{r}
+# Wrangle the data
+Litter.Totals <- Litter %>%
+  group_by(plotID, collectDate, nlcdClass) %>%
+  summarise(dryMass = sum(dryMass))
+
+# Format ANOVA as aov
+Litter.Totals.anova <- aov(data = Litter.Totals, dryMass ~ plotID)
+summary(Litter.Totals.anova)
+
+# Extract groupings for pairwise relationships
+Litter.Totals.groups <- HSD.test(Litter.Totals.anova, "plotID", group = TRUE)
+Litter.Totals.groups$groups
+
+Litter.Totals <- Litter.Totals %>%
+  mutate( treatgroups = Litter.Totals.groups$groups[plotID,2])
+
+# Graph the results
+Litter.Totals.plot <- ggplot(Litter.Totals, aes(x = plotID, y = dryMass)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  stat_summary(geom = "text", fun = max, vjust = -1, size = 3.5,
+               label = c("abc", "ab", "abcd", "bcd", "bcd", "a", 
+                         "d", "abcd", "cd", "d", "abcd", "abcd")) +
+  labs(x = "Plot ID", y = "Dry Mass (g)") +
+  ylim(0, 85)
+print(Litter.Totals.plot)
+
+```
+
+```{r}
+#Exercise 7: Improve the plot
+
