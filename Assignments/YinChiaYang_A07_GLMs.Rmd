@@ -25,7 +25,7 @@ This exercise accompanies the lessons in Environmental Data Analytics on general
 
 2. Build a ggplot theme and set it as your default theme.
 
-```{r setup2}
+```{r setup2, message=FALSE, warning=FALSE}
 #1
 getwd()
 library(tidyverse)
@@ -76,7 +76,7 @@ Ha: Mean lake temperature recorded during July change with depth across all lake
 
 5. Visualize the relationship among the two continuous variables with a scatter plot of temperature by depth. Add a smoothed line showing the linear model, and limit temperature values from 0 to 35 °C. Make this plot look pretty and easy to read.
 
-```{r scatterplot}
+```{r scatterplot, message=FALSE, warning=FALSE}
 #4
 NTL_LTER_Jul <- NTL_LTER %>% 
   filter(month(sampledate) == 7) %>% 
@@ -174,7 +174,7 @@ summary(NTL_LTER_Jul.anova2)
 
 14. Create a graph that depicts temperature by depth, with a separate color for each lake. Add a geom_smooth (method = "lm", se = FALSE) for each lake. Make your points 50 % transparent. Adjust your y axis limits to go from 0 to 35 degrees. Clean up your graph to make it pretty. 
 
-```{r scatterplot.2}
+```{r scatterplot.2, message=FALSE, warning=FALSE}
 #14.
 NTL_LTER_tem.by.dep <- NTL_LTER %>% 
   ggplot(aes(x=depth, y=temperature_C, color=lakename)) +
@@ -199,7 +199,7 @@ NTL_LTER_Jul.subset2 <- NTL_LTER_Jul.subset2 %>%
 
 16.From the findings above, which lakes have the same mean temperature, statistically speaking, as Peter Lake? Does any lake have a mean temperature that is statistically distinct from all the other lakes?
 
->Answer:Statistically speaking, Cramton Lake and Paul Lake has the same mean temperature as Peter Lake, and Centeral Long lake has a mean temperature that is statistically distinct from all the other lakes. 
+>Answer:Statistically speaking, Cramton Lake and Paul Lake has the same mean temperature as Peter Lake, and no lake has a mean temperature that is statistically distinct from all the other lakes. 
 
  
 
@@ -220,8 +220,8 @@ NTL_LTER_Jul_CramptonWard <- NTL_LTER_Jul %>%
   droplevels() 
 
 CramptonWard.twosample <- t.test(NTL_LTER_Jul_CramptonWard$temperature_C ~
-NTL_LTER_Jul_CramptonWard$lakename, var.equal = TRUE, alternative = "two.sided")
+NTL_LTER_Jul_CramptonWard$lakename)
 print(CramptonWard.twosample)
 ```
 
->Answer: The result from the two sample t-test shaws that the ture difference in means between group Crampton Lake and group Ward Lake is not equal to 0, with the degree of freedom = 432, and p-value = 0.26 (<0.05), so the results are statistically significant under a 95% confidence level, and we could reject the null hypothesis. Meanwhile, the mean temperature calaulated through two sample t-test (Crampton Lake: 15.35189, Ward Lake: 14.45862) is larger than the mean temperature calaulated from Q16 with the Tukey's HSD test (Crampton Lake: 13.93676, Ward Lake: 14.26964), as th Tukey's HSD test takes family errors into account.
+>Answer: The result from the two sample t-test shaws that there is no statistically difference in the means between Crampton Lake and Ward Lake, with the degree of freedom = 200.37, p-value = 0.26 (<0.05), so the results are statistically significant under a 95% confidence level, and we could reject the alternative hypothesis. This matches the result from Q16 with the Tukey's HSD test that the mean temperature from the two lakes are similar and could be considered equal.
