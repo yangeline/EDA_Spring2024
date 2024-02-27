@@ -48,8 +48,31 @@ Create three plots, each with appropriately formatted axes and legends. Choose a
 
 ```{r}
 #Exercise 1:
+Ozone_by_Year_regression <- lm(EPAair$Ozone ~ EPAair$Year)
+summary(Ozone_by_Year_regression)
 
+o3.density.plot <- 
+  ggplot(EPAair, aes(x= Ozone, fill= as.factor(Year))) + 
+  ##density plot doesn't need y-axis, seperate by "fill=()"
+  ##Year was int, need to change into factor for layer
+  geom_density(alpha=0.5) +
+  scale_fill_manual(values = c("blue", "yellow")) +
+  labs(x="Ozone", y= "Density", fill= "Year")
+  print(o3.density.plot)
+  
+o3.boxplot <- 
+ggplot(EPAair, aes(x= as.factor(Year), y= Ozone)) + 
+  geom_boxplot() +
+  labs(x="Ozone", y= "Density", fill= "Year") +
+  stat_summary(geom = "text", fun = max, vjust =-1, size=4, label= c("b","a"))
+print(o3.boxplot)
 
+o3.violinplot <- 
+ggplot(EPAair, aes(x= as.factor(Year), y= Ozone)) + 
+  geom_violin(draw_quantiles = 0.5) +
+  labs(x="Ozone", y= "Density", fill= "Year") +
+  stat_summary(geom = "text", fun = max, vjust =-1, size=4, label= c("b","a"))
+print(o3.violinplot)
 ```
 
 ## Linear Regression
@@ -62,12 +85,17 @@ For the NTL-LTER dataset, can we predict PM2.5 from Ozone?
 
 #Exercise 2: Run a linear regression PM2.5 by Ozone. Find the p-value and R-squared value. 
 
-
+PM25.O3.regerssion <-
+  lm(EPAair$PM2.5 ~ EPAair$Ozone)
+summary(PM25.O3.regerssion)
 
 #Exercise 3: Build a scatterplot. Add a line and standard error for the linear regression. Add the regression equation to the plot
 
-
-
+PM25.O3.lm_plot <- 
+  ggplot(EPAair, aes(x=Ozone, y=PM2.5)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = lm)
+print(PM25.O3.lm_plot)
 ```
 
 
@@ -79,7 +107,15 @@ What other variables can we add to improve model?
 
 #Exercise 4: Build correlation plots and identify more possible explanatory variables to add to the regression.
 
+library(corrplot)
+EPAair.subset <- 
+  EPAair %>%
+  select(mean_Lat:Ozone) %>%
+  na.omit()
 
+corr.EPA <- cor(EPAair.subset)
+corrplot(corr.EPA, method = "ellipse")
+corrplot.mixed(corr.EPA, upper = "ellipse")
 
 
 #Exercise 5: Choose a model by AIC in a Stepwise Algorithm. Do the results from AIC match the variables you selected on Exercise 4?
