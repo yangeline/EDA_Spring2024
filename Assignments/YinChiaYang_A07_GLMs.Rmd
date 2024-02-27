@@ -33,7 +33,8 @@ library(agricolae)
 library(here)
 here()
 
-NTL_LTER <- read.csv(here("Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv"), stringsAsFactors = TRUE)
+NTL_LTER <- read.csv(
+here("Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv"), stringsAsFactors = TRUE)
 # Set date to date format
 NTL_LTER$sampledate <- as.Date(NTL_LTER$sampledate, format = "%m/%d/%y")
 
@@ -218,7 +219,8 @@ NTL_LTER_Jul_CramptonWard <- NTL_LTER_Jul %>%
   filter(lakename %in% c('Crampton Lake', 'Ward Lake')) %>% 
   droplevels() 
 
-CramptonWard.twosample <- t.test(NTL_LTER_Jul_CramptonWard$temperature_C ~ NTL_LTER_Jul_CramptonWard$lakename, var.equal = TRUE, alternative = "two.sided")
+CramptonWard.twosample <- t.test(NTL_LTER_Jul_CramptonWard$temperature_C ~
+NTL_LTER_Jul_CramptonWard$lakename, var.equal = TRUE, alternative = "two.sided")
 print(CramptonWard.twosample)
 ```
 
